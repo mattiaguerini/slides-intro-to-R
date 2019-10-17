@@ -13,6 +13,10 @@ toc:        TRUE
 ```{r setup, include=FALSE, echo=FALSE}
 library(knitr)
 opts_chunk$set(echo = FALSE)
+
+library(tidyverse)
+library(eurostat)
+library(reshape2)
 ```
 
 ## Schedule 
@@ -32,6 +36,10 @@ opts_chunk$set(echo = FALSE)
 - homeworks
 
 - no book (plenty of open source resources on-line)
+
+- slides <https://github.com/mattiaguerini/slides-intro-to-R>
+
+- exam based on the econometric course
 
 # Introduction 
 
@@ -347,98 +355,575 @@ L$numbers[1:3] > 2
 ```
 \normalsize
 
-<!-- ## Data Frames (I) -->
-<!-- A `data.frame` is similar to a typical `spreadsheet` in excel.  -->
+## Data Frames (I)
+A `data.frame` is similar to a typical `spreadsheet` in excel.
 
-<!-- There are rows, and there are columns.  -->
+There are rows, and there are columns.
 
-<!-- A row is typically thought of as an \emph{observation}. -->
+A row is typically thought of as an \emph{observation}.
 
-<!-- A column is a certain \emph{variable}, characteristic or feature of that observation. -->
+A column is a certain \emph{variable}, characteristic or feature of that observation.
 
-<!-- ## Data Frames (II) -->
-<!-- A data frame is a list of column vectors where: -->
+## Data Frames (II)
+A data frame is a list of column vectors where:
 
-<!-- - each column has a name -->
+- each column has a name
 
-<!-- - each column must contain the same data type, but the different columns can store different data types. -->
+- each column must contain the same data type, but the different columns can store different data types.
 
-<!-- - each column must be of same length -->
+- each column must be of same length
 
-<!-- ## Data Frames (III)  -->
-<!-- \scriptsize -->
-<!-- ```{r dataframe, include=T, echo=T} -->
-<!-- set.seed(1) -->
-<!-- df <-  data.frame(id = 1:5,  -->
-<!--   name = c("Ted", "Barney", "Lily", "Marshall", "Robin"), -->
-<!--   surname = c("Mosby", "Stinson", "Aldrin", "Eriksen", "Scherbatsky"), -->
-<!--   wage = rnorm(n=5, mean = 1000, sd = 100), # normal random sample -->
-<!--   origin = c("Cleveland", "New York", "New York", "St. Cloud", "Canada"), -->
-<!--   male = c(T, T, F, T, F) -->
-<!--   ) -->
-<!-- df -->
-<!-- ``` -->
-<!-- \normalsize -->
+## Data Frames (III)
+\scriptsize
+```{r dataframe, include=T, echo=T}
+set.seed(1)
+df <-  data.frame(id = 1:5,
+  name = c("Ted", "Barney", "Lily", "Marshall", "Robin"),
+  surname = c("Mosby", "Stinson", "Aldrin", "Eriksen", "Scherbatsky"),
+  wage = rnorm(n=5, mean = 1000, sd = 100), # normal random sample
+  origin = c("Cleveland", "New York", "New York", "St. Cloud", "Canada"),
+  male = c(T, T, F, T, F)
+  )
+df
+```
+\normalsize
 
-<!-- You can verify the size of the `data.frame` using the command `dim()` -->
+You can verify the size of the `data.frame` using the command `dim()`
 
-<!-- You can get the `data type` info using the command `str()` -->
+You can get the `data type` info using the command `str()`
 
-<!-- ## Subsetting Data Frames (I) -->
-<!-- \footnotesize -->
-<!-- ```{r dataframe_subset, include=T, echo=T} -->
-<!-- df$name # subset a column -->
-<!-- df[,c(2,5)] # can also subset like a matrix -->
-<!-- ``` -->
-<!-- \normalsize -->
+## Subsetting Data Frames (I)
+\footnotesize
+```{r dataframe_subset, include=T, echo=T}
+df$name # subset a column
+df[,c(2,5)] # can also subset like a matrix
+```
+\normalsize
 
-<!-- ## Subsetting Data Frames (II) -->
-<!-- \footnotesize -->
-<!-- ```{r dataframe_subset2, include=T, echo=T} -->
-<!-- head(df, n=3) # first n observations -->
-<!-- tail(df, n=3) # last n observations -->
-<!-- ``` -->
-<!-- \normalsize -->
+## Subsetting Data Frames (II)
+\footnotesize
+```{r dataframe_subset2, include=T, echo=T}
+head(df, n=3) # first n observations
+tail(df, n=3) # last n observations
+```
+\normalsize
 
-<!-- ## Inspecting data frames (I) -->
-<!-- R comes with many data bases included. These can be used for learning R. -->
+## Inspecting data frames (I)
+R comes with many data bases included. These can be used for learning R.
 
-<!-- One of the most famous is the one called `mtcars`. -->
-<!-- \scriptsize -->
-<!-- ```{r dataframe_mtcars, include=T, echo=T} -->
-<!-- head(mtcars) -->
-<!-- dim(mtcars) -->
-<!-- ``` -->
-<!-- \normalsize -->
+One of the most famous is the one called `mtcars`.
+\scriptsize
+```{r dataframe_mtcars, include=T, echo=T}
+head(mtcars)
+dim(mtcars)
+```
+\normalsize
 
-<!-- ## Inspecting data frames (II) -->
-<!-- \scriptsize -->
-<!-- ```{r dataframe_mtcars2, include=T, echo=T} -->
-<!-- str(mtcars) -->
-<!-- names(mtcars) -->
-<!-- ``` -->
-<!-- \normalsize -->
+## Inspecting data frames (II)
+\scriptsize
+```{r dataframe_mtcars2, include=T, echo=T}
+str(mtcars)
+names(mtcars)
+```
+\normalsize
 
-<!-- ## Subsetting data frames (III) -->
-<!-- We are interesting in the cylinders and the weights of inefficient cars (lower than 15 miles per gallon). -->
-<!-- \scriptsize -->
-<!-- ```{r dataframe_subset_mtcars, include=T, echo=T} -->
-<!-- poll_cars <- mtcars[mtcars$mpg<15, c("cyl", "wt")] -->
-<!-- poll_cars -->
-<!-- ``` -->
-<!-- \normalsize -->
+## Subsetting data frames (III)
+We are interesting in the cylinders and the weights of inefficient cars (lower than 15 miles per gallon).
+\scriptsize
+```{r dataframe_subset_mtcars, include=T, echo=T}
+poll_cars <- mtcars[mtcars$mpg<15, c("cyl", "wt")]
+poll_cars
+```
+\normalsize
 
-<!-- ## Subsetting data frames (IV) -->
-<!-- Alternatively: -->
-<!-- \scriptsize -->
-<!-- ```{r dataframe_subset_mtcars2, include=T, echo=T} -->
-<!-- poll_cars <- subset(mtcars, subset = mpg<15, select = c("cyl", "wt")) -->
-<!-- poll_cars -->
-<!-- ``` -->
-<!-- \normalsize -->
+## Subsetting data frames (IV)
+Alternatively:
+\scriptsize
+```{r dataframe_subset_mtcars2, include=T, echo=T}
+poll_cars <- subset(mtcars, subset = mpg<15, select = c("cyl", "wt"))
+poll_cars
+```
+\normalsize
+
+## Importing data frames (I)
+You can import csv data using:
+\scriptsize
+```{r import_data2, include=T, echo=T}
+setwd("~/Google Drive/T_2019c_UCA_ETRICS/data/")
+nyc_ab <- read.csv("AB_NYC_2019.csv")
+```
+\normalsize
+
+where:
+
+- `setwd()` sets the working directory to the place where the data is saved;
+
+- `read.csv()` loads the csv file with the specified name.
 
 # Basic Programming
 
-# Plotting (`ggplot2` library)
+## Variables
+In programming, a variable denotes an object (i.e. a variable is a name or a label for something).
+\scriptsize
+```{r variables, include=T, echo=T}
+x <- 1
+f <- function(x){x*2+2}
+```
+\normalsize
+Notice that the argument x of the function is different from the x previously defined. The second is only local to the function and always required to be specified.
 
-# Working with Data (`tydiverse` and `reshape2` libraries)
+Try to compute `r f(1)` or `r f(9)`.
+
+## Control Flows (I)
+Also known as an if/else statement. It relates to ways in which you can adapt your code to different circumstances.
+
+Based on a condition being TRUE, your program will do one thing, as opposed to another thing. 
+
+In R, the if/else syntax has the following structure:
+\scriptsize
+```{r controlflow_prepare, include=F, echo=F}
+condition <- T
+do_something <- "do something"
+do_something_different <- "do something different"
+```
+\normalsize
+
+\scriptsize
+```{r controlflow, include=T, echo=T}
+if (condition == TRUE) { 
+  do_something
+} else {
+  do_something_different
+}
+```
+\normalsize
+
+## Control Flows (II) - Example
+\scriptsize
+```{r controlflow2, include=T, echo=T}
+x <- 1
+y <- 3
+if (x>y) {
+  print("x is larger than y")
+  z <- x*y
+  print(paste0("z is equal to ", z))
+} else {
+  print("x is smaller or equal than y")
+  z <- x*y - 1
+  print(paste0("z is equal to ", z))
+}
+```
+\normalsize
+
+## Control Flows (III) - Example with more conditions
+\scriptsize
+```{r controlflow3, include=T, echo=T}
+x <- 3
+y <- 3
+if (x>y) {
+  print("x is larger than y")
+  z <- x*y + 1
+  print(paste0("z is equal to ", z))
+} else if (x==y) {
+  print("x is equal than y")
+  z <- x*y
+  print(paste0("z is equal to ", z))
+} else {
+  print("x is smaller than y")
+  z <- x*y - 1
+  print(paste0("z is equal to ", z))
+}
+```
+\normalsize
+
+## Loops (I)
+As the name suggests, in a loop the program repeats a set of instructions many times, until some condition tells it to stop.
+
+A very powerful, yet simple, construction is that the program can count how many steps it has done already - which may be important to know for many algorithms. 
+
+The syntax of a `for` loop is the following:
+\scriptsize
+```{r loops, include=T, echo=T}
+for (i in 1:10){
+  # does not have to be 1:10! 
+  # loop body: gets executed each time
+  # the value of i changes with each iteration
+}
+```
+\normalsize
+
+## Loops (II) - Example
+Produce a loop that displays the double of the loop round.
+\scriptsize
+```{r loops2, include=T, echo=T}
+for (i in 1:5){ 
+  y <- i*2
+  print(y)
+}
+```
+\normalsize
+
+## Loops (III) - Example with more loops
+You can even have loops into other loops. 
+
+These can be useful for exploring combinations of events:
+\scriptsize
+```{r loops3, include=T, echo=T}
+quantity <- c(2,3)
+fruits <- c("mangos", "apples", "bananas")
+
+for (i in quantity){ # first nest: for each i
+  for (j in fruits){ # second nest: for each j
+    print(paste("Can I get",i,j,"please?")) 
+    }
+}
+```
+\normalsize
+
+## Functions (I)
+So far we have been using functions, but haven’t actually discussed some of their details. 
+
+A function is a set of instructions that R executes for us, much like those collected in a script file. 
+
+The good thing is that functions are much more flexible than scripts, since they can depend on input arguments, which change the way the function behaves. 
+
+## Functions (II)
+Here is how to define a function in general:
+\scriptsize
+```{r functions, include=T, echo=T}
+function_name <- function(arg1 ,arg2=default_value){
+  # function body
+  # you do stuff with arg1 and arg2
+  # you can have any number of arguments, with or without defaults 
+  # any valid `R` commands can be included here
+  # the last line is returned
+}
+```
+\normalsize
+
+## Function (III) - Example
+\scriptsize
+```{r functions2, include=T, echo=T}
+hello <- function(your_name = "Lord Vader"){ 
+  paste("You R most welcome,", your_name)
+  # we could also write:
+  # return(paste("You R most welcome,",your_name))
+}
+# we call the function by typing it's name with round brackets
+```
+
+```{r functions3, include=T, echo=T}
+hello()
+hello("Mattia")
+```
+\normalsize
+
+# Working with Data (`tydiverse` library)
+
+## Tidyverse
+The tidyverse is acollection of R packages designed for data science. 
+
+All packages share an underlying design philosophy, grammar, and data structures. 
+
+Useful info here: <https://www.tidyverse.org>
+
+Install it with the command `install.packages("tidyverse")`
+
+Load it with the command `library(tidyverse)`
+
+## Tidyverse packages (some of them)
+
+The core `tidyverse` package includes (among the others)
+
+- `magrittr` operators and verbs to decrease development time and improve readability of code (i.e. \emph{to make your code smokin'})
+
+- `dplyr` set of verbs that solve the most common data manipulation challenges
+
+- `tidyr` set of functions that help you get to tidy data.
+
+- `readr` and `readxl` fast and friendly way to read rectangular data (like .csv and .xls)
+
+- `ggplot2` system for declaratively creating graphics, based on The \emph{Grammar of Graphics} (next section)
+
+\bf{Note}: it does not contain the `reshape2` package!
+
+## from magrittr: the pipe operator
+We'll learn the new commands using the `mtcars` dataset.
+
+The operator `%>%` (Cmd + Shift + M) pipes the left-hand side values forward into expressions that appear on the right-hand side -- e.g. one can replace f(x) with x %>% f().
+
+\scriptsize
+```{r pipe_operator, include=T, echo=T}
+9 %>% 
+  sqrt() %>%  # 3
+  + 22        # 25
+```
+
+```{r pipe_operator_mtcars, include=T, echo=T}
+mtcars %>% 
+  subset(mpg<15)
+```
+\normalsize
+
+## from dplyr: `select()` variables by columns
+Rather than using the `$` you can use select
+\scriptsize
+```{r dplyr_select, include=T, echo=T}
+?dplyr::select
+```
+
+```{r dplyr_select2, include=T, echo=T}
+head(select(mtcars, c(mpg, cyl)))
+```
+\normalsize
+
+## from dplyr: `filter()` variables by row conditions
+Rather than using the `subset` function you can use `filter`
+\scriptsize
+```{r dplyr_filter, include=T, echo=T}
+?dplyr::filter
+```
+
+```{r dplyr_filter2, include=T, echo=T}
+filter(mtcars, mpg<15)
+```
+\normalsize
+
+But...we lose the names of the cars!!
+
+## combining dplyr and magrittr
+We can combine into a easily readable format functions from the two packages.
+\scriptsize
+```{r dplyr_magrittr, include=T, echo=T}
+mtcars %>% 
+  rownames_to_column('name') %>% # from library tibble 
+  select(name, mpg, cyl) %>% 
+  filter(mpg<15)
+```
+\normalsize
+
+## from dplyr: `mutate()` variables
+What if we would like to measure consumption in km/l rather than m/g or if we need to measure the `log` of horsepowers.
+\scriptsize
+```{r dplyr_mutate, include=T, echo=T}
+mtcars %>% 
+  rownames_to_column('name') %>%
+  select(name, mpg, hp) %>% 
+  filter(mpg<15) %>% 
+  mutate(kml = mpg*0.425144) %>% # 0.425144 is the conversion ratio
+  mutate(lhp = log(hp))
+```
+\normalsize
+
+## from dplyr: `arrange()` variables
+What if we don't like the order of the variables?
+
+And what if we'd like to display them from most to least efficient (in terms of km/l) 
+
+\scriptsize
+```{r dplyr_arrange, include=T, echo=T}
+mtcars %>% 
+  rownames_to_column('name') %>%
+  select(name, mpg, hp) %>% 
+  filter(mpg<15) %>% 
+  mutate(kml = mpg*0.425144) %>% # 0.425144 is the conversion ratio
+  mutate(lhp = log(hp)) %>% 
+  select(name, mpg, kml, hp, lhp) %>% 
+  arrange(desc(kml))
+```
+\normalsize
+
+## Digression on data frame formats
+\scriptsize
+<https://github.com/rstudio/cheatsheets/blob/master/data-import.pdf>
+
+![Data wrangle](~/Google Drive/T_2019c_UCA_ETRICS/figures/r_datawrangle.png)
+\normalsize
+
+## from tidyr: `gather()` data frames
+\scriptsize
+```{r tidyr_gather, include=T, echo=T}
+mtcars %>% 
+  rownames_to_column('name') %>%
+  select(name, mpg, hp) %>% 
+  filter(mpg<15) %>% 
+  mutate(kml = mpg*0.425144) %>% # 0.425144 is the conversion ratio
+  select(name, mpg, kml) %>% 
+  gather(key = "variable", "value", -name)
+```
+\normalsize
+
+<!-- # Using Economic Data (`eurostat` library) -->
+
+<!-- ## Install and load `eurostat` -->
+<!-- Library to directly download data from Eurostat webpage: <https://ec.europa.eu/eurostat/data/database> -->
+
+<!-- More information here: <https://cran.r-project.org/web/packages/eurostat/eurostat.pdf> -->
+
+<!-- Cheat sheet here: <http://ropengov.github.io/eurostat/articles/cheatsheet.html> -->
+
+<!-- \scriptsize -->
+<!-- ```{r eurostat_load, include=T, echo=T, warning=F, message=F} -->
+<!-- library(eurostat) -->
+<!-- ``` -->
+<!-- \normalsize -->
+
+<!-- ## Preliminary questions -->
+<!-- Let's focus on municipal waste by NUTS 2 regions. The name of this data is `env_rwas_gen`	 -->
+
+<!-- - What is NUTS2? <https://en.wikipedia.org/wiki/Regions_of_France> -->
+
+<!-- - How can we load it into R? -->
+
+<!-- - What does the dataset contain? -->
+
+<!-- - In which format the data is? Long (tidy, gathered) or wide (undity, spreaded)? -->
+
+<!-- ## Load the data -->
+<!-- You need to understand what you want to (and can) do. -->
+<!-- \scriptsize -->
+<!-- ```{r eurostat_waste, include=T, echo=T, warning=F, message=F} -->
+<!-- eu_waste <- get_eurostat(id = "env_rwas_gen") %>% -->
+<!--   filter(wst_oper == "GEN") %>% # what? waste generated  -->
+<!--   filter(unit == "THS_T") %>% # measured how? thousands of tonnes -->
+<!--   filter(time >= "2006-01-01" & time <= "2010-01-01") # when? years in 2005-2010 -->
+
+<!-- eu_waste -->
+<!-- ``` -->
+<!-- \normalsize -->
+
+<!-- ## from dplyr: `group_by`  -->
+<!-- Imagine we now want some aggregate information for each region (e.g. the total waste over the years) -->
+<!-- \scriptsize -->
+<!-- ```{r eurostat_waste2, include=T, echo=T, warning=F, message=F} -->
+<!-- eu_waste <- eu_waste %>%  -->
+<!--   group_by(geo) %>% # grouping  -->
+<!--   mutate(tot_values = sum(values)) %>%  -->
+<!--   ungroup() %>% # remember to ungroup (to avoid unindented actions) -->
+<!--   arrange(geo, time) # we can even arrange by two variables at the time -->
+
+<!-- eu_waste -->
+<!-- ``` -->
+<!-- \normalsize -->
+
+<!-- ## from dplyr: `summarise()`  -->
+<!-- Imagine we now ONLY want some summary statistics for each region: -->
+
+<!-- - the `max` and `average` waste per region over the years -->
+
+<!-- - the `number of observations` per region -->
+
+<!-- \scriptsize -->
+<!-- ```{r eurostat_waste3, include=T, echo=T, warning=F, message=F} -->
+<!-- eu_waste_sum <- eu_waste %>%  -->
+<!--   group_by(geo) %>% # grouping  -->
+<!--   summarise(max = max(values), -->
+<!--             mean = mean(values), -->
+<!--             n_obs = n()) %>%  -->
+<!--   ungroup() -->
+
+<!-- head(eu_waste_sum) -->
+<!-- ``` -->
+<!-- \normalsize -->
+
+<!-- ## from dplyr: `top_n()`  -->
+<!-- - which are the top 3 regions with more waste in 2009?  -->
+
+<!-- - which are the top 3 regions with less waste in 2009?  -->
+
+<!-- \scriptsize -->
+<!-- ```{r eurostat_waste4, include=T, echo=T, warning=F, message=F} -->
+<!-- eu_waste %>%  -->
+<!--   filter(time == "2009-01-01") %>%  -->
+<!--   top_n(values, n = 3) -->
+
+<!-- eu_waste %>%  -->
+<!--   filter(time == "2009-01-01") %>%  -->
+<!--   top_n(values, n = -3) -->
+<!-- ``` -->
+<!-- \normalsize -->
+
+<!-- # Plotting (`ggplot2` library) -->
+
+<!-- ## What is `ggplot2` -->
+<!-- `ggplot2` is a system for declaratively creating graphics, based on \emph{The Grammar of Graphics}.  -->
+
+<!-- You provide the data, tell `ggplot2`: -->
+
+<!-- - how to map variables to aesthetics,  -->
+
+<!-- - what graphical primitives to use,  -->
+
+<!-- and it takes care of the details. -->
+
+<!-- Look `?ggplot()` -->
+
+<!-- Cheatsheet here: <https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf> -->
+
+<!-- ## Prepare datasets  -->
+
+<!-- Reduce to few countries and to one period -->
+<!-- \scriptsize -->
+<!-- ```{r waste_cross_section, include=T, echo=T, warning=F, message=F} -->
+<!-- cross_section_waste <- eu_waste %>%  -->
+<!--   select(time, geo, values) %>%  -->
+<!--   filter(time == "2010-01-01") %>%  -->
+<!--   filter(geo %in% c("DE", "ES", "FR", "IT", "NL", "PT")) %>%  -->
+<!--   arrange(geo) -->
+<!-- ``` -->
+<!-- \normalsize -->
+
+<!-- Keep all times but reduce to few countries -->
+<!-- \scriptsize -->
+<!-- ```{r waste_time_series, include=T, echo=T, warning=F, message=F} -->
+<!-- time_series_waste <- eu_waste %>%  -->
+<!--   select(time, geo, values) %>%  -->
+<!--   filter(geo %in% c("DE", "ES", "FR", "IT", "NL", "PT")) %>%  -->
+<!--   arrange(geo) -->
+<!-- ``` -->
+<!-- \normalsize -->
+
+<!-- Keep all regions but reduce to one period (remove whole countries as well) -->
+<!-- \scriptsize -->
+<!-- ```{r waste_time_series2, include=T, echo=T, warning=F, message=F} -->
+<!-- geospatial <- eurostat_geodata_60_2016 -->
+<!-- map_waste <- eu_waste %>%  -->
+<!--   select(time, geo, values) %>%  -->
+<!--   filter(time == "2010-01-01") %>%  -->
+<!--   filter(!substr(geo, start = 3, stop = 4) == "") %>% # to remove full countries -->
+<!--   arrange(geo) -->
+<!-- map_waste <- merge(map_waste, geospatial) -->
+<!-- ``` -->
+<!-- \normalsize -->
+
+<!-- ## Plotting cross-section data -->
+<!-- \scriptsize -->
+<!-- ```{r ggplot_barplot, include=T, echo=T, warning=F, message=F, fig.width=10, fig.height=6} -->
+<!-- ggplot(cross_section_waste, aes(x = geo, y = values, group = geo, fill = geo)) +  -->
+<!--   geom_bar(stat = "identity") +  -->
+<!--   ggtitle("Generated waste in selected countries in 2010") +  -->
+<!--   theme_bw() -->
+<!-- ``` -->
+<!-- \normalsize -->
+
+<!-- ## Plotting time-series data -->
+<!-- \scriptsize -->
+<!-- ```{r ggplot_timeseries, include=T, echo=T, warning=F, message=F, fig.width=10, fig.height=6} -->
+<!-- ggplot(time_series_waste, aes(x = time, y = values, group = geo, col = geo)) +  -->
+<!--   geom_line() +  -->
+<!--   geom_point() +  -->
+<!--   ggtitle("Generated waste in selected countries over time") +  -->
+<!--   theme_bw() -->
+<!-- ``` -->
+<!-- \normalsize -->
+
+<!-- ## Plotting maps (e.g. euro) -->
+<!-- \scriptsize -->
+<!-- ```{r ggplot_mapplot, include=T, echo=T, warning=F, message=F, fig.width=8, fig.height=5} -->
+<!-- ggplot(map_waste, aes(x = long, y = lat, group = geo, fill = geo)) +  -->
+<!--   geom_bar(stat = "identity") +  -->
+<!--   ggtitle("Generated waste in selected countries in 2010") +  -->
+<!--   theme_bw() -->
+<!-- ``` -->
+<!-- \normalsize -->
+
