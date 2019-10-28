@@ -753,177 +753,167 @@ mtcars %>%
 ```
 \normalsize
 
-<!-- # Using Economic Data (`eurostat` library) -->
+# Using Economic Data (`eurostat` library)
 
-<!-- ## Install and load `eurostat` -->
-<!-- Library to directly download data from Eurostat webpage: <https://ec.europa.eu/eurostat/data/database> -->
+## Install and load `eurostat`
+Library to directly download data from Eurostat webpage: <https://ec.europa.eu/eurostat/data/database>
 
-<!-- More information here: <https://cran.r-project.org/web/packages/eurostat/eurostat.pdf> -->
+More information here: <https://cran.r-project.org/web/packages/eurostat/eurostat.pdf>
 
-<!-- Cheat sheet here: <http://ropengov.github.io/eurostat/articles/cheatsheet.html> -->
+Cheat sheet here: <http://ropengov.github.io/eurostat/articles/cheatsheet.html>
 
-<!-- \scriptsize -->
-<!-- ```{r eurostat_load, include=T, echo=T, warning=F, message=F} -->
-<!-- library(eurostat) -->
-<!-- ``` -->
-<!-- \normalsize -->
+\scriptsize
+```{r eurostat_load, include=T, echo=T, warning=F, message=F}
+library(eurostat)
+```
+\normalsize
 
-<!-- ## Preliminary questions -->
-<!-- Let's focus on municipal waste by NUTS 2 regions. The name of this data is `env_rwas_gen`	 -->
+## Preliminary questions
+Let's focus on municipal waste by NUTS 2 regions. The name of this data is `env_rwas_gen`
 
-<!-- - What is NUTS2? <https://en.wikipedia.org/wiki/Regions_of_France> -->
+- What is NUTS2? <https://en.wikipedia.org/wiki/Regions_of_France>
 
-<!-- - How can we load it into R? -->
+- How can we load it into R?
 
-<!-- - What does the dataset contain? -->
+- What does the dataset contain?
 
-<!-- - In which format the data is? Long (tidy, gathered) or wide (undity, spreaded)? -->
+- In which format the data is? Long (tidy, gathered) or wide (non-tidy, spreaded)?
 
-<!-- ## Load the data -->
-<!-- You need to understand what you want to (and can) do. -->
-<!-- \scriptsize -->
-<!-- ```{r eurostat_waste, include=T, echo=T, warning=F, message=F} -->
-<!-- eu_waste <- get_eurostat(id = "env_rwas_gen") %>% -->
-<!--   filter(wst_oper == "GEN") %>% # what? waste generated  -->
-<!--   filter(unit == "THS_T") %>% # measured how? thousands of tonnes -->
-<!--   filter(time >= "2006-01-01" & time <= "2010-01-01") # when? years in 2005-2010 -->
+## Load the data
+You need to understand what you want to (and can) do.
+\scriptsize
+```{r eurostat_waste, include=T, echo=T, warning=F, message=F}
+eu_waste <- get_eurostat(id = "env_rwas_gen") %>%
+  filter(wst_oper == "GEN") %>% # what? waste generated
+  filter(unit == "THS_T") %>% # measured how? thousands of tonnes
+  filter(time >= "2006-01-01" & time <= "2010-01-01") # when? years in 2005-2010
 
-<!-- eu_waste -->
-<!-- ``` -->
-<!-- \normalsize -->
+eu_waste
+```
+\normalsize
 
-<!-- ## from dplyr: `group_by`  -->
-<!-- Imagine we now want some aggregate information for each region (e.g. the total waste over the years) -->
-<!-- \scriptsize -->
-<!-- ```{r eurostat_waste2, include=T, echo=T, warning=F, message=F} -->
-<!-- eu_waste <- eu_waste %>%  -->
-<!--   group_by(geo) %>% # grouping  -->
-<!--   mutate(tot_values = sum(values)) %>%  -->
-<!--   ungroup() %>% # remember to ungroup (to avoid unindented actions) -->
-<!--   arrange(geo, time) # we can even arrange by two variables at the time -->
+## from dplyr: `group_by`
+Imagine we now want some aggregate information for each region (e.g. the total waste over the years)
+\scriptsize
+```{r eurostat_waste2, include=T, echo=T, warning=F, message=F}
+eu_waste <- eu_waste %>%
+  group_by(geo) %>% # grouping
+  mutate(tot_values = sum(values)) %>%
+  ungroup() %>% # remember to ungroup (to avoid unindented actions)
+  arrange(geo, time) # we can even arrange by two variables at the time
 
-<!-- eu_waste -->
-<!-- ``` -->
-<!-- \normalsize -->
+eu_waste
+```
+\normalsize
 
-<!-- ## from dplyr: `summarise()`  -->
-<!-- Imagine we now ONLY want some summary statistics for each region: -->
+## from dplyr: `summarise()`
+Imagine we now ONLY want some summary statistics for each region:
 
-<!-- - the `max` and `average` waste per region over the years -->
+- the `max` and `average` waste per region over the years
 
-<!-- - the `number of observations` per region -->
+- the `number of observations` per region
 
-<!-- \scriptsize -->
-<!-- ```{r eurostat_waste3, include=T, echo=T, warning=F, message=F} -->
-<!-- eu_waste_sum <- eu_waste %>%  -->
-<!--   group_by(geo) %>% # grouping  -->
-<!--   summarise(max = max(values), -->
-<!--             mean = mean(values), -->
-<!--             n_obs = n()) %>%  -->
-<!--   ungroup() -->
+\scriptsize
+```{r eurostat_waste3, include=T, echo=T, warning=F, message=F}
+eu_waste_sum <- eu_waste %>%
+  group_by(geo) %>% # grouping
+  summarise(max = max(values),
+            mean = mean(values),
+            n_obs = n()) %>%
+  ungroup()
 
-<!-- head(eu_waste_sum) -->
-<!-- ``` -->
-<!-- \normalsize -->
+head(eu_waste_sum)
+```
+\normalsize
 
-<!-- ## from dplyr: `top_n()`  -->
-<!-- - which are the top 3 regions with more waste in 2009?  -->
+## from dplyr: `top_n()`
+- which are the top 3 regions with more waste in 2009?
 
-<!-- - which are the top 3 regions with less waste in 2009?  -->
+- which are the top 3 regions with less waste in 2009?
 
-<!-- \scriptsize -->
-<!-- ```{r eurostat_waste4, include=T, echo=T, warning=F, message=F} -->
-<!-- eu_waste %>%  -->
-<!--   filter(time == "2009-01-01") %>%  -->
-<!--   top_n(values, n = 3) -->
+\scriptsize
+```{r eurostat_waste4, include=T, echo=T, warning=F, message=F}
+eu_waste %>%
+  filter(time == "2009-01-01") %>%
+  top_n(values, n = 3)
 
-<!-- eu_waste %>%  -->
-<!--   filter(time == "2009-01-01") %>%  -->
-<!--   top_n(values, n = -3) -->
-<!-- ``` -->
-<!-- \normalsize -->
+eu_waste %>%
+  filter(time == "2009-01-01") %>%
+  top_n(values, n = -3)
+```
+\normalsize
 
-<!-- # Plotting (`ggplot2` library) -->
+# Plotting (`ggplot2` library)
 
-<!-- ## What is `ggplot2` -->
-<!-- `ggplot2` is a system for declaratively creating graphics, based on \emph{The Grammar of Graphics}.  -->
+## What is `ggplot2`
+`ggplot2` is a system for declaratively creating graphics, based on \emph{The Grammar of Graphics}.
 
-<!-- You provide the data, tell `ggplot2`: -->
+You provide the data, tell `ggplot2`:
 
-<!-- - how to map variables to aesthetics,  -->
+- how to map variables to aesthetics,
 
-<!-- - what graphical primitives to use,  -->
+- what graphical primitives to use,
 
-<!-- and it takes care of the details. -->
+and it takes care of the details.
 
-<!-- Look `?ggplot()` -->
+Look `?ggplot()`
 
-<!-- Cheatsheet here: <https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf> -->
+Cheatsheet here: <https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf>
 
-<!-- ## Prepare datasets  -->
+## Prepare datasets
 
-<!-- Reduce to few countries and to one period -->
-<!-- \scriptsize -->
-<!-- ```{r waste_cross_section, include=T, echo=T, warning=F, message=F} -->
-<!-- cross_section_waste <- eu_waste %>%  -->
-<!--   select(time, geo, values) %>%  -->
-<!--   filter(time == "2010-01-01") %>%  -->
-<!--   filter(geo %in% c("DE", "ES", "FR", "IT", "NL", "PT")) %>%  -->
-<!--   arrange(geo) -->
-<!-- ``` -->
-<!-- \normalsize -->
+Reduce to few countries and to one period
+\scriptsize
+```{r waste_cross_section, include=T, echo=T, warning=F, message=F}
+cross_section_waste <- eu_waste %>%
+  select(time, geo, values) %>%
+  filter(time == "2010-01-01") %>%
+  filter(geo %in% c("DE", "ES", "FR", "IT", "NL", "PT")) %>%
+  arrange(geo)
+```
+\normalsize
 
-<!-- Keep all times but reduce to few countries -->
-<!-- \scriptsize -->
-<!-- ```{r waste_time_series, include=T, echo=T, warning=F, message=F} -->
-<!-- time_series_waste <- eu_waste %>%  -->
-<!--   select(time, geo, values) %>%  -->
-<!--   filter(geo %in% c("DE", "ES", "FR", "IT", "NL", "PT")) %>%  -->
-<!--   arrange(geo) -->
-<!-- ``` -->
-<!-- \normalsize -->
+Keep all times but reduce to few countries
+\scriptsize
+```{r waste_time_series, include=T, echo=T, warning=F, message=F}
+time_series_waste <- eu_waste %>%
+  select(time, geo, values) %>%
+  filter(geo %in% c("DE", "ES", "FR", "IT", "NL", "PT")) %>%
+  arrange(geo)
+```
+\normalsize
 
 <!-- Keep all regions but reduce to one period (remove whole countries as well) -->
 <!-- \scriptsize -->
 <!-- ```{r waste_time_series2, include=T, echo=T, warning=F, message=F} -->
 <!-- geospatial <- eurostat_geodata_60_2016 -->
-<!-- map_waste <- eu_waste %>%  -->
-<!--   select(time, geo, values) %>%  -->
-<!--   filter(time == "2010-01-01") %>%  -->
+<!-- map_waste <- eu_waste %>% -->
+<!--   select(time, geo, values) %>% -->
+<!--   filter(time == "2010-01-01") %>% -->
 <!--   filter(!substr(geo, start = 3, stop = 4) == "") %>% # to remove full countries -->
 <!--   arrange(geo) -->
 <!-- map_waste <- merge(map_waste, geospatial) -->
 <!-- ``` -->
-<!-- \normalsize -->
+\normalsize
 
-<!-- ## Plotting cross-section data -->
-<!-- \scriptsize -->
-<!-- ```{r ggplot_barplot, include=T, echo=T, warning=F, message=F, fig.width=10, fig.height=6} -->
-<!-- ggplot(cross_section_waste, aes(x = geo, y = values, group = geo, fill = geo)) +  -->
-<!--   geom_bar(stat = "identity") +  -->
-<!--   ggtitle("Generated waste in selected countries in 2010") +  -->
-<!--   theme_bw() -->
-<!-- ``` -->
-<!-- \normalsize -->
+## Plotting cross-section data
+\scriptsize
+```{r ggplot_barplot, include=T, echo=T, warning=F, message=F, fig.width=10, fig.height=6}
+ggplot(cross_section_waste, aes(x = geo, y = values, group = geo, fill = geo)) +
+  geom_bar(stat = "identity") +
+  ggtitle("Generated waste in selected countries in 2010") +
+  theme_bw()
+```
+\normalsize
 
-<!-- ## Plotting time-series data -->
-<!-- \scriptsize -->
-<!-- ```{r ggplot_timeseries, include=T, echo=T, warning=F, message=F, fig.width=10, fig.height=6} -->
-<!-- ggplot(time_series_waste, aes(x = time, y = values, group = geo, col = geo)) +  -->
-<!--   geom_line() +  -->
-<!--   geom_point() +  -->
-<!--   ggtitle("Generated waste in selected countries over time") +  -->
-<!--   theme_bw() -->
-<!-- ``` -->
-<!-- \normalsize -->
-
-<!-- ## Plotting maps (e.g. euro) -->
-<!-- \scriptsize -->
-<!-- ```{r ggplot_mapplot, include=T, echo=T, warning=F, message=F, fig.width=8, fig.height=5} -->
-<!-- ggplot(map_waste, aes(x = long, y = lat, group = geo, fill = geo)) +  -->
-<!--   geom_bar(stat = "identity") +  -->
-<!--   ggtitle("Generated waste in selected countries in 2010") +  -->
-<!--   theme_bw() -->
-<!-- ``` -->
-<!-- \normalsize -->
+## Plotting time-series data
+\scriptsize
+```{r ggplot_timeseries, include=T, echo=T, warning=F, message=F, fig.width=10, fig.height=6}
+ggplot(time_series_waste, aes(x = time, y = values, group = geo, col = geo)) +
+  geom_line() +
+  geom_point() +
+  ggtitle("Generated waste in selected countries over time") +
+  theme_bw()
+```
+\normalsize
 
