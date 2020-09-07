@@ -125,9 +125,9 @@ Otherwise:
 ## Packages 
 R comes with a number of built-in functions and datasets, but one of the main strengths of R as an open-source project is its package system. 
 
-Packages add additional functions and datasets. 
+Packages gives you access to additional functions and datasets. 
 
-Frequently if you want to do something in R, and it is not available by default, there is a good chance that there is a package that will fulfill your needs.
+If you want to do something which is not doable with the R basic functions, there is a good chance that there exist a package that will fulfill your needs.
 
 You can install packages using the command `install.packages()`
 
@@ -145,7 +145,7 @@ You can load packages using the command `library()`
 
 - Logical (e.g. TRUE, FALSE or NA)
 
-- Character (e.g. "a", "b", "paper", \dots)
+- Character (e.g. "a", "paper", "2 plus 2 = 5", "TRUE", \dots)
 
 - Factor/Categorical ("male", "female", \dots)
 
@@ -169,7 +169,7 @@ c(1, "intro", TRUE)
 ```
 \normalsize
 
-You can measure the lenght of a vector using the command `length()`
+You can measure the length of a vector using the command `length()`
 \footnotesize
 ```{r vectors_length, include=T, echo=T}
 length(x)
@@ -191,8 +191,8 @@ You can combine different vectors
 \footnotesize
 ```{r vectors_multiple, include=T, echo=T}
 x <- 1:3 # from 1 to 3
-y <- c(10, 15) # 10 and 11
-z <- c(x,y) # x first and then y
+y <- c(10, 15) # 10 and 15
+z <- c(x,y) # x first and then y 
 z
 ```
 \normalsize
@@ -211,11 +211,11 @@ z
 \footnotesize
 ```{r vectors_subset, include=T, echo=T}
 x <- c(1,5,10,7) 
-x < 6 # elements lower than 6?
-x == 10 # elements equal to 10?
-x[2] # element in the second position?
-x[1:2] # elements in the first 2 positions?
-x[c(1,3,4)] # elements in position 1, 3, 4?
+x < 6 # is the element lower than 6?
+x == 10 # is the element equal to 10?
+x[2] # which element is in the second position?
+x[1:2] # which elements are in the first 2 positions?
+x[c(1,3,4)] # which elements are in positions 1, 3 and 4?
 ```
 \normalsize
 
@@ -224,7 +224,7 @@ x[c(1,3,4)] # elements in position 1, 3, 4?
 ```{r vectors_operations, include=T, echo=T}
 x <- c(1,5,10,7)
 x+2 # adds a scalar to all elements
-x^2 # squares all elements
+x^2 # what's the square of all elements?
 ```
 \normalsize
 
@@ -318,13 +318,13 @@ X
 
 - Remember that vectors, matrices and arrays can include only data types of the same kind.
 
-- An 3D array is basically a combination of matrices each laid on top of other (e.g. write N matrix in N different pages in your notebook)
+- A 3D array is basically a combination of matrices each laid on top of other (e.g. write N KxK matrices in N different pages in your notebook)
 
 - A 4D array is basically a combination of arrays each laid on top of other (e.g. take two notebooks of 3D arrays)
 
 - A 5D array ...
 
-- Pay attention to the `recycling rule`
+- Pay attention to the `recycling rule` (<https://cran.r-project.org/doc/manuals/r-devel/R-intro.html#The-recycling-rule>)
 
 ## Lists
 A list is a one-dimensional heterogeneous data structure.
@@ -378,11 +378,11 @@ A data frame is a list of column vectors where:
 ```{r dataframe, include=T, echo=T}
 set.seed(1)
 df <-  data.frame(id = 1:5,
-  name = c("Ted", "Barney", "Lily", "Marshall", "Robin"),
-  surname = c("Mosby", "Stinson", "Aldrin", "Eriksen", "Scherbatsky"),
-  wage = rnorm(n=5, mean = 1000, sd = 100), # normal random sample
-  origin = c("Cleveland", "New York", "New York", "St. Cloud", "Canada"),
-  male = c(T, T, F, T, F)
+  name = c("Diego", "Samuel", "Marco", "Javier", "Leonardo"),
+  surname = c("Milito", "Eto'o", "Materazzi", "Zanetti", "Bonucci"),
+  wage = rnorm(n=5, mean = 10^5, sd = 10^3), # normal random sample
+  origin = c("Argentina", "Cameroon", "Italy", "Argentina", "Italy"),
+  treble_winner = c(T, T, T, T, F)
   )
 df
 ```
