@@ -1,6 +1,6 @@
-# Slides "Intro to R"
+# Introduction to R
 
-Here you can find the slides for the course "Introduction to R". 
+Here you can find the material for the course "Introduction to R". 
 
 The slides have been prepared for students in the Master "Expertise Economique" at the Université Côte d'Azur during the fall semester of the 2020-2021 academic year.
 
