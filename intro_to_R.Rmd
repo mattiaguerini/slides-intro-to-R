@@ -445,8 +445,8 @@ poll_cars
 ```
 \normalsize
 
-## Importing data frames (I)
-You can import csv data using:
+## Importing downloaded data frames
+You can import csv data that you have downloaded from any external source using:
 \scriptsize
 ```{r import_data2, include=T, echo=T}
 setwd("~/Google Drive/T_2020a_UCA_introR/data/")
@@ -459,6 +459,8 @@ where:
 - `setwd()` sets the working directory to the place where the data is saved;
 
 - `read.csv()` loads the csv file with the specified name.
+
+You can similarly import almost any kind of data file stored in other formats (.xls, .txt, .csv, .dta, .Rdata, .mat, ...)
 
 ```{r knit_exit, include=F, echo=F}
 knit_exit()
