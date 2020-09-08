@@ -33,8 +33,6 @@ library(reshape2)
 
 - 20 minutes break
 
-- homeworks
-
 - no book (plenty of open source resources on-line)
 
 - slides <https://github.com/mattiaguerini/slides-intro-to-R>
@@ -44,13 +42,15 @@ library(reshape2)
 # Introduction 
 
 ## What is R 
-R is both a programming language and software environment for statistical computing, which is free and open-source. 
+R is both a programming language and software environment for statistical computing, which is free and open-source (<https://www.r-project.org/about.html>).
 
-The \emph{R Project} was initiated by Robert Gentleman and Ross Ihaka (University of Auckland) in the early 1990s as a different implementation of the S language.
+The \emph{R Project} was initiated by Robert Gentleman and Ross Ihaka (University of Auckland) in the early 1990s as a different implementation of the S language, which was developed at Bell Laboratories.
 
 Since 1997, R has been developed by the \emph{R Development Core Team}.
 
 R is platform independent and can run on Microsoft Windows, Mac OS and Unix/Linux systems.
+
+Popularity: <https://www.tiobe.com/tiobe-index/>
 
 ## Getting Started 
 To get started, you'll need to install two pieces of software:
