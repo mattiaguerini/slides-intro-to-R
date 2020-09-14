@@ -462,10 +462,6 @@ where:
 
 You can similarly import almost any kind of data file stored in other formats (.xls, .txt, .csv, .dta, .Rdata, .mat, ...)
 
-```{r knit_exit, include=F, echo=F}
-knit_exit()
-```
-
 # Basic Programming
 
 ## Variables
@@ -758,6 +754,10 @@ mtcars %>%
   gather(key = "variable", "value", -name)
 ```
 \normalsize
+
+```{r knit_exit, include=F, echo=F}
+knit_exit()
+```
 
 # Using Economic Data (`eurostat` library)
 
