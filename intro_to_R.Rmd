@@ -787,10 +787,6 @@ object.size(long_data)
 \normalsize
 
 
-```{r knit_exit, include=F, echo=F}
-knit_exit()
-```
-
 # Using Economic Data (`eurostat` library)
 
 ## Install and load `eurostat`
@@ -954,3 +950,7 @@ ggplot(time_series_waste, aes(x = time, y = values, group = geo, col = geo)) +
   theme_bw()
 ```
 \normalsize
+
+```{r knit_exit, include=F, echo=F}
+knit_exit()
+```
