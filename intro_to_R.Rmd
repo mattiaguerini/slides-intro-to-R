@@ -794,7 +794,7 @@ Library to directly download data from Eurostat webpage: <https://ec.europa.eu/e
 
 More information here: <https://cran.r-project.org/web/packages/eurostat/eurostat.pdf>
 
-Cheat sheet here: <http://ropengov.github.io/eurostat/articles/cheatsheet.html>
+Cheat sheet here: <http://ropengov.github.io/eurostat/articles/website/cheatsheet.html>
 
 \scriptsize
 ```{r eurostat_load, include=T, echo=T, warning=F, message=F}
