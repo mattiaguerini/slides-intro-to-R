@@ -70,8 +70,8 @@ Why RStudio?\footnote{\scriptsize You must have installed R before using RStudio
 - Plenty of cheatsheets (see top panel)
 
 ## Screenshot of RConsole 
-
 ![RConsole](~/Documents/GitHub/slides-intro-to-R/figures/r_console.png)
+
 ## Screenshot of RStudio 
 ![RStudio](~/Documents/GitHub/slides-intro-to-R/figures/r_studio.png)
 
